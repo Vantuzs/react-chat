@@ -1,0 +1,1 @@
+export const getMessages = ()=> fetch('https://dummyjson.com/comments').then((response)=> response.json())
