@@ -4,11 +4,12 @@ import Chat from '../Chat/Chat';
 import MessageArea from '../MessageArea/MessageArea';
 import styles from './Dashboard.module.css'
 import UserContext from '../../contexts/UserContext';
+import MessageContext from '../../contexts/MessageContext';
 import { getMessages } from '../../api';
 import CONSTANTS from '../../constants';
 import messageReducer from '../../reducers/messageReducer';
 
-const {ACTIONS: {MESSAGES_LOAD_SUCCESS,MESSAGES_LOAD_ERROR,ADD_NEW_MESSAGE}} = CONSTANTS
+const {ACTIONS: {MESSAGES_LOAD_SUCCESS,MESSAGES_LOAD_ERROR,ADD_NEW_MESSAGE,DELETE_MESSAGE}} = CONSTANTS
 
 const INITIAL_STATE = {
     messages: [],
@@ -51,17 +52,42 @@ const Dashboard = () => {
         })
     }
 
+    const deleteMessage =(id)=>{
+        dispatch({
+            type: DELETE_MESSAGE,
+            payload: id
+        })
+    }
+
     return (
-        <UserContext.Provider value={user}>
+        <MessageContext.Provider value={{
+            messageState: state,
+            deleteMessage
+        }}>
+            <UserContext.Provider value={user}>
             <main className={styles.container}>
             <DialogList />
             <section className={styles.wrapper}>
-            <Chat dashboardState={state}/>
+            <Chat />
             <MessageArea sendMessage={createMessage} />
             </section>
         </main>
         </UserContext.Provider>
+        </MessageContext.Provider>
     );
 }
 
 export default Dashboard;
+
+
+/* 
+
+Как реализовать удаления сообщений 
+
+1. Задиспатчить определённый action в messageReduser
+Тоесть, нам нужно сделать соответствующий action type в константах
+2. Научить редюсер реагировать на сответствующий action
+Тоесть, там нужно прописать удаление сообщения с стейта
+3. В компоненте ChatItem прописать оброботчик действий удаления сообщения
+
+*/

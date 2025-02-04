@@ -1,5 +1,5 @@
 import CONSTANTS from '../constants';
-const {ACTIONS: {MESSAGES_LOAD_SUCCESS,MESSAGES_LOAD_ERROR,ADD_NEW_MESSAGE}} = CONSTANTS
+const {ACTIONS: {MESSAGES_LOAD_SUCCESS,MESSAGES_LOAD_ERROR,ADD_NEW_MESSAGE,DELETE_MESSAGE}} = CONSTANTS
 
 function messageReducer(state,action){
     switch(action.type){
@@ -27,6 +27,16 @@ function messageReducer(state,action){
                     ...state,
                     messages: newMessageArray
                 }
+        }
+        case DELETE_MESSAGE: {
+            const {payload: deleteMessageId}= action
+            const filteredMessages = state.messages
+            .filter(currentMessage=>currentMessage.id !== deleteMessageId)
+
+            return {
+                ...state,
+                messages: filteredMessages
+            }
         }
         default: return state
     }
